@@ -7,13 +7,13 @@ public class User
 {
     public int Id { get; set; }
 
-    public string Login { get; set; } = null!;
-
-    public string Password { get; set; } = null!;
+    public string IdentityId { get; set; }
 
     public int CountRequests { get; set; }
 
     public DateTime? LastRequest { get; set; }
+    public bool IsBanned { get; set; }
+    public DateTime? UnbanTime { get; set; }
 
     public int SubscriptionId { get; set; }
 

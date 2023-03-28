@@ -15,26 +15,37 @@
         [Route("api/[controller]")]
         public class AuthenticationController : ControllerBase
         {
+            private readonly RoleManager<IdentityRole> _roleManager;
+            private readonly UserManager<IdentityUser> _userManager;
             private readonly IConfiguration _configuration;
             private readonly IUnitOfWorks _unitOfWorks;
 
-            public AuthenticationController(IConfiguration configuration, IUnitOfWorks unitOfWorks)
+            public AuthenticationController(IConfiguration configuration, IUnitOfWorks unitOfWorks, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
             {
                 _unitOfWorks = unitOfWorks;
                 _configuration = configuration;
+                _roleManager = roleManager;
+                _userManager = userManager;
+                
             }
 
             [HttpPost]
             [Route("login")]
             public async Task<IActionResult> Login([FromBody] Login model)
             {
-                var user = await _unitOfWorks.UsersRepo.FindByLoginAsync(model.UserName);
-                if (user != null && _unitOfWorks.UsersRepo.CheckPassword(user, model.Password))
+                var user = await _userManager.FindByNameAsync(model.UserName);
+                if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
                 {
+                    var userRole = await _userManager.GetRolesAsync(user);
                     var authClaims = new List<Claim> {
-                        new Claim(ClaimTypes.Name, user.Login),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-                    };
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                };
+
+                    foreach (var role in userRole)
+                    {
+                        authClaims.Add(new Claim(ClaimTypes.Role, role));
+                    }
 
                     var token = GetToken(authClaims);
 
@@ -42,6 +53,7 @@
                     {
                         Token = new JwtSecurityTokenHandler().WriteToken(token),
                         expiration = token.ValidTo,
+                        Roles = userRole
                     });
                 }
                 return Unauthorized();
@@ -51,23 +63,37 @@
             [Route("regUser")]
             public async Task<IActionResult> RegUser([FromBody] Register model)
             {
-                var userEx =  await _unitOfWorks.UsersRepo.FindByLoginAsync(model.UserName);
+                var userEx = await _userManager.FindByNameAsync(model.UserName);
                 if (userEx != null) 
                     return StatusCode(StatusCodes.Status500InternalServerError, "User in db already");
 
-                User user = new()
+                IdentityUser identityUser = new()
                 {
-                    Login = model.UserName,
-                    Password = model.Password,
-                    SubscriptionId = (int)Subscriptions.Subscriptions.Free,
-                    CountRequests = 0,
-                    LastRequest = null 
+                    UserName = model.UserName,
+                    SecurityStamp = Guid.NewGuid().ToString()
                 };
 
+                var res = await _userManager.CreateAsync(identityUser, model.Password);
+                if (!res.Succeeded) 
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Creation failed!");
+
+                User user = new User
+                {
+                    IdentityId = identityUser.Id,
+                    IsBanned = false,
+                    LastRequest = null,
+                    SubscriptionId = (int)Subscriptions.Subscriptions.Free,
+                    UnbanTime = null,
+                    CountRequests = 0,
+                };
                 _unitOfWorks.UsersRepo.Add(user);
-                if(_unitOfWorks.Commit() > 0)
-                    return Ok("User added!");
-                return StatusCode(StatusCodes.Status500InternalServerError, "Something went wrong!");
+
+                await CreateRoles();
+
+                if (await _roleManager.RoleExistsAsync(UserRoles.UserRoles.UserFree))
+                    await _userManager.AddToRoleAsync(identityUser, UserRoles.UserRoles.UserFree);
+
+                return Ok("User added!");
             }
 
             private JwtSecurityToken GetToken(List<Claim> claimsList)
@@ -82,6 +108,20 @@
                     );
 
                 return token;
+            }
+
+            private async Task CreateRoles()
+            {
+                if (!await _roleManager.RoleExistsAsync(UserRoles.UserRoles.UserFree))
+                    await _roleManager.CreateAsync(new IdentityRole(UserRoles.UserRoles.UserFree));
+                if (!await _roleManager.RoleExistsAsync(UserRoles.UserRoles.UserFreePlus))
+                    await _roleManager.CreateAsync(new IdentityRole(UserRoles.UserRoles.UserFreePlus));
+                if (!await _roleManager.RoleExistsAsync(UserRoles.UserRoles.UserPlus))
+                    await _roleManager.CreateAsync(new IdentityRole(UserRoles.UserRoles.UserPlus));
+                if (!await _roleManager.RoleExistsAsync(UserRoles.UserRoles.UserPremium))
+                    await _roleManager.CreateAsync(new IdentityRole(UserRoles.UserRoles.UserPremium));
+                if (!await _roleManager.RoleExistsAsync(UserRoles.UserRoles.Admin))
+                    await _roleManager.CreateAsync(new IdentityRole(UserRoles.UserRoles.Admin));
             }
         }
     }

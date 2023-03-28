@@ -9,6 +9,7 @@ using DataAccessEF.Repositories;
 using Domain.Interfaces.IUnitOfWorks;
 using DataAccessEF.UnitOfWorks;
 using Domain.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -49,6 +50,10 @@ builder.Services.AddDbContext<DbA966d8ChatgptContext>(options =>
 options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection"),
     b => b.MigrationsAssembly(typeof(DbA966d8ChatgptContext).Assembly.FullName)));
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<DbA966d8ChatgptContext>()
+    .AddDefaultTokenProviders();
+
 builder.Services.AddAuthentication(opt =>
 {
     opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
