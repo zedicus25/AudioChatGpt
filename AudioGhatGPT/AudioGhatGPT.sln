@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AudioGhatGPT", "AudioGhatGPT.csproj", "{CD3E5F6C-87D2-46BB-95AC-E64487D73B2E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D2B50D8C-BC91-4F1D-B900-C0406F1F6F58} = {D2B50D8C-BC91-4F1D-B900-C0406F1F6F58}
+		{F42B25AA-9F4F-40CB-B810-794874091CFE} = {F42B25AA-9F4F-40CB-B810-794874091CFE}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "..\Domain\Domain.csproj", "{F42B25AA-9F4F-40CB-B810-794874091CFE}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessEF", "..\DataAccessEF\DataAccessEF.csproj", "{D2B50D8C-BC91-4F1D-B900-C0406F1F6F58}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F42B25AA-9F4F-40CB-B810-794874091CFE} = {F42B25AA-9F4F-40CB-B810-794874091CFE}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CD3E5F6C-87D2-46BB-95AC-E64487D73B2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD3E5F6C-87D2-46BB-95AC-E64487D73B2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD3E5F6C-87D2-46BB-95AC-E64487D73B2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD3E5F6C-87D2-46BB-95AC-E64487D73B2E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F42B25AA-9F4F-40CB-B810-794874091CFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F42B25AA-9F4F-40CB-B810-794874091CFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F42B25AA-9F4F-40CB-B810-794874091CFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F42B25AA-9F4F-40CB-B810-794874091CFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2B50D8C-BC91-4F1D-B900-C0406F1F6F58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2B50D8C-BC91-4F1D-B900-C0406F1F6F58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2B50D8C-BC91-4F1D-B900-C0406F1F6F58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2B50D8C-BC91-4F1D-B900-C0406F1F6F58}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EF056256-7300-45D5-89B8-709B89649CB0}
+	EndGlobalSection
+EndGlobal
