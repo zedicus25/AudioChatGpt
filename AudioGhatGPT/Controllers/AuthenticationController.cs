@@ -95,6 +95,50 @@
 
                 return Ok("User added!");
             }
+            [HttpPost]
+            [Route("regAdmin")]
+            public async Task<IActionResult> RegAdmin([FromBody] Register model)
+            {
+                var userEx = await _userManager.FindByNameAsync(model.UserName);
+                if (userEx != null)
+                    return StatusCode(StatusCodes.Status500InternalServerError, "User in db already");
+
+                IdentityUser identityUser = new()
+                {
+                    UserName = model.UserName,
+                    SecurityStamp = Guid.NewGuid().ToString()
+                };
+
+                var res = await _userManager.CreateAsync(identityUser, model.Password);
+                if (!res.Succeeded)
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Creation failed!");
+
+                User user = new User
+                {
+                    IdentityId = identityUser.Id,
+                    IsBanned = false,
+                    LastRequest = null,
+                    SubscriptionId = (int)Subscriptions.Subscriptions.Premium,
+                    UnbanTime = null,
+                    CountRequests = 0,
+                };
+                _unitOfWorks.UsersRepo.Add(user);
+
+                await CreateRoles();
+
+                if (await _roleManager.RoleExistsAsync(UserRoles.UserRoles.UserFree))
+                    await _userManager.AddToRoleAsync(identityUser, UserRoles.UserRoles.UserFree);
+                if (await _roleManager.RoleExistsAsync(UserRoles.UserRoles.UserFreePlus))
+                    await _userManager.AddToRoleAsync(identityUser, UserRoles.UserRoles.UserFreePlus);
+                if (await _roleManager.RoleExistsAsync(UserRoles.UserRoles.UserPlus))
+                    await _userManager.AddToRoleAsync(identityUser, UserRoles.UserRoles.UserPlus);
+                if (await _roleManager.RoleExistsAsync(UserRoles.UserRoles.UserPremium))
+                    await _userManager.AddToRoleAsync(identityUser, UserRoles.UserRoles.UserPremium);
+                if (await _roleManager.RoleExistsAsync(UserRoles.UserRoles.Admin))
+                    await _userManager.AddToRoleAsync(identityUser, UserRoles.UserRoles.Admin);
+
+                return Ok("User added!");
+            }
 
             private JwtSecurityToken GetToken(List<Claim> claimsList)
             {
