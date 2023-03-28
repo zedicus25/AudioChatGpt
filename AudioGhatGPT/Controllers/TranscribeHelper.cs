@@ -8,14 +8,18 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using System;
+using static System.Net.Mime.MediaTypeNames;
+using Amazon.Rekognition.Model;
+using Amazon.Rekognition;
 
 namespace AudioGhatGPT.Controllers
 {
     public class TranscribeHelper
     {
         private readonly  RegionEndpoint _region;
-        private AmazonTranscribeServiceClient _transcribeClient { get; set; } = null!;
-        private AmazonS3Client _s3Client { get; set; } = null!;
+        private readonly AmazonTranscribeServiceClient _transcribeClient;
+        private readonly AmazonS3Client _s3Client;
+        private readonly AmazonRekognitionClient _rekognitionClient;
 
         private string _bucketName;
 
@@ -26,6 +30,8 @@ namespace AudioGhatGPT.Controllers
             _s3Client = new AmazonS3Client(ConfigurationManager.AppSettings["Amazon:AccessKey"],
                 ConfigurationManager.AppSettings["Amazon:SecretKey"], _region);
             _transcribeClient = new AmazonTranscribeServiceClient(ConfigurationManager.AppSettings["Amazon:AccessKey"],
+                ConfigurationManager.AppSettings["Amazon:SecretKey"], _region);
+            _rekognitionClient = new AmazonRekognitionClient(ConfigurationManager.AppSettings["Amazon:AccessKey"],
                 ConfigurationManager.AppSettings["Amazon:SecretKey"], _region);
         }
 
@@ -74,7 +80,7 @@ namespace AudioGhatGPT.Controllers
             return results;
         }
 
-        private async Task<string> UploadFileToBucket(IFormFile file)
+        private async Task<string> UploadFileToBucket(IFormFile file, bool returnUri = true)
         {
             string fileKey = Guid.NewGuid().ToString() +"_"+ file.FileName;
             using (var newMemoryStream = new MemoryStream())
@@ -93,7 +99,9 @@ namespace AudioGhatGPT.Controllers
             }
 
             var httpUri = $"https://{_bucketName}.s3.amazonaws.com/{fileKey}";
-            return httpUri;
+            if(returnUri)
+                return httpUri;
+            return fileKey;
         }
 
         private async Task SaveS3ObjectAsFile(string bucketName, string key, string filePath)
@@ -104,10 +112,39 @@ namespace AudioGhatGPT.Controllers
             }
         }
 
-        /// <summary>
-        /// Delete file from S3 bucket.
-        /// </summary>
-        /// <param name="filename"></param>
+
+        public async Task<string> GetLinesFromImage(IFormFile file)
+        {
+            string fileInfo = "";
+            string fileName = await UploadFileToBucket(file, false);
+
+            DetectTextRequest detectTextRequest = new DetectTextRequest()
+            {
+                Image = new Amazon.Rekognition.Model.Image()
+                {
+                    S3Object = new Amazon.Rekognition.Model.S3Object()
+                    {
+                        Name = fileName,
+                        Bucket = _bucketName,
+                        
+                    }
+                }
+            };
+
+            try
+            {
+                DetectTextResponse detectTextResponse = _rekognitionClient.DetectTextAsync(detectTextRequest).GetAwaiter().GetResult();
+                foreach (TextDetection text in detectTextResponse.TextDetections.Where(x => x.Type == TextTypes.LINE))
+                {
+                    fileInfo += text.DetectedText + " \n";
+                }
+            }
+            catch (Exception e)
+            {
+            }
+            return fileInfo;
+        }
+
         private async Task DeleteObjectFromBucket(string filename, string bucketName)
         {
             Console.WriteLine($"Delete {filename} from bucket {bucketName}");

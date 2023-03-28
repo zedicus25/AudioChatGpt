@@ -1,7 +1,7 @@
 import { useState } from "react";
-import api from './../../apiAccess';
+import api from '../../apiAccess';
 
-const LoginPage = () => {
+const LoginModal = () => {
     const [login, setLogin] = useState("");
     const [password, setPassword] = useState("");
 
@@ -24,4 +24,4 @@ const LoginPage = () => {
         </div>
     )
 }
-export default LoginPage;
+export default LoginModal;

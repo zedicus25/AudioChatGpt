@@ -24,7 +24,7 @@ const get = async (url) => {
 const post = async(url, data) => {
     let res = {};
 
-    await axios.post(url, JSON.stringify(data), {
+    await axios.post(url, data, {
         headers:{
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -60,6 +60,13 @@ const postWithFile = async(url, data) => {
 const getAudioResponce = async(data) => {
     return await postWithFile(`${apiUrl}/Gpt/getReponseFromAudio`, data);
 }
+const getPhotoResponce = async(data) => {
+    return await postWithFile(`${apiUrl}/Gpt/getReponseFromImage`, data);
+}
+const getTextResponce = async(data) => {
+    return await post(`${apiUrl}/Gpt/getReponseFromText?requestText=${data}`,{});
+}
+
 
 
 //--------------------authorization--------------------
@@ -73,7 +80,9 @@ const signUp = async(login, password) => {
 const methods = {
     signIn: signIn,
     signUp: signUp,
-    getAudioResponce: getAudioResponce
+    getAudioResponce: getAudioResponce,
+    getPhotoResponce: getPhotoResponce,
+    getTextResponce: getTextResponce
 }
 
 export default methods;
