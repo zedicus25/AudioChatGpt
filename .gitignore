@@ -1,5 +1,5 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
+AudioGhatGPT/appsettings.json
 # dependencies
 /node_modules
 /.pnp
@@ -116,7 +116,7 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
-*.json
+
 
 # Chutzpah Test files
 _Chutzpah*
