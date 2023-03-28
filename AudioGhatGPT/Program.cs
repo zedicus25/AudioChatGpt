@@ -4,8 +4,11 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using ConfigurationManager = AudioGhatGPT.ConfigurationManager;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using DataAccesEF.Data;
+using DataAccessEF.Repositories;
+using Domain.Interfaces.IUnitOfWorks;
+using DataAccessEF.UnitOfWorks;
+using Domain.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -39,10 +42,9 @@ builder.Services.AddSwaggerGen(options => {
     });
 });
 
-/*builder.Services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepo<>));
-builder.Services.AddTransient<IProductRepository, ProductRepo>();
-builder.Services.AddTransient<ICategoryRepository, CategoryRepo>();
-builder.Services.AddTransient<IUnitOfWorks, UnitOfWorks>();*/
+builder.Services.AddTransient(typeof(IGenericRepo<>), typeof(GenericRepo<>));
+builder.Services.AddTransient<IUserRepo, UserRepo>();
+builder.Services.AddTransient<IUnitOfWorks, UnitOfWorks>();
 builder.Services.AddDbContext<DbA966d8ChatgptContext>(options =>
 options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection"),

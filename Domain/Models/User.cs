@@ -13,7 +13,7 @@ public class User
 
     public int CountRequests { get; set; }
 
-    public DateTime LastRequest { get; set; }
+    public DateTime? LastRequest { get; set; }
 
     public int SubscriptionId { get; set; }
 
