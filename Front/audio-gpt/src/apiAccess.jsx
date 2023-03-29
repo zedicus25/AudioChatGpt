@@ -1,8 +1,6 @@
 import axios from "axios";
 import token from './jwtToken';
 
-//const apiUrl = "https://assetstoreapi.azurewebsites.net/api";
-//const apiUrl = "http://wonof44260-001-site1.itempurl.com/api";
 const apiUrl = "https://localhost:7231/api";
 
 const get = async (url) => {
@@ -27,7 +25,7 @@ const post = async(url, data) => {
     await axios.post(url, data, {
         headers:{
             'Accept': 'application/json',
-            'Content-Type': `multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW`,
+            'Content-Type': `application/json`,
             'Authorization': "Bearer " + token.getToken()
         }
     }).then(function(response) {
@@ -67,6 +65,11 @@ const getTextResponce = async(data) => {
     return await post(`${apiUrl}/Gpt/getReponseFromText?requestText=${data}&userId=${sessionStorage.getItem("userId")}`,{});
 }
 
+//------------subscriptions------------------
+const upadteSubscriptions = async(data) => {
+    return await post(`${apiUrl}/Subscription/updateSubscription?userId=${sessionStorage.getItem("userId")}&subscriptionId=${data}`)
+}
+
 
 
 //--------------------authorization--------------------
@@ -82,7 +85,8 @@ const methods = {
     signUp: signUp,
     getAudioResponce: getAudioResponce,
     getPhotoResponce: getPhotoResponce,
-    getTextResponce: getTextResponce
+    getTextResponce: getTextResponce,
+    upadteSubscriptions: upadteSubscriptions
 }
 
 export default methods;

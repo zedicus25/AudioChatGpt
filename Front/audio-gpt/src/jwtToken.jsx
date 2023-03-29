@@ -1,6 +1,7 @@
 const tokenKey = 'token';
 
 const setToken = (token) => {
+    console.log(getUserData());
     sessionStorage.setItem(tokenKey, token);
 }
 

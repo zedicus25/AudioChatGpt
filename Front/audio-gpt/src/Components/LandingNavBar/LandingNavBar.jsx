@@ -1,11 +1,22 @@
 import './LandingNavBar.css'
 import { Link } from 'react-router-dom';
 import LoginModal from '../LoginModal/LoginModal';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RegistrationModal from '../RegistrationModal/RegistrationModal';
+import token from './../../jwtToken';
 const LandingNavBar = () => {
     const [modalShow, setModalShow] =  useState(false);
     const [modalRegShow, setModalRegShow] =  useState(false);
+    const [userName, setUserName] =  useState("");
+
+
+    useEffect(() => {
+        let res = token.getUserData();
+        if(res !== undefined){
+            setUserName(res.username);
+        }
+    }, []);
+
 return(
     <header className="header">
         <div className='container'>
@@ -21,11 +32,13 @@ return(
                     <div className='nav-container'>
                         <nav className='nav-menu'>
                             <ul>
-                                
+                            {userName !== "" &&        
+                            <li><Link to='/chat'>Chat</Link></li>     }
                             </ul>
                         </nav>
                     </div>
                     <div className='control-btn'>
+                            <Link className='control-btn-a'>{userName}</Link>
                             <Link className='control-btn-a' onClick={() => setModalShow(true)}>Login</Link>
                             <Link className='control-btn-a' onClick={() => setModalRegShow(true)}>Registration</Link>
                         </div>
@@ -34,7 +47,11 @@ return(
             </div>
         </div>
         <LoginModal show={modalShow}
-    onHide={() => setModalShow(false)}></LoginModal>
+    onHide={() =>{ setModalShow(false);
+        let res = token.getUserData();
+        if(res !== undefined){
+            setUserName(res.username);
+        }}}></LoginModal>
     <RegistrationModal show={modalRegShow}
     onHide={() => setModalRegShow(false)}></RegistrationModal>
     </header>

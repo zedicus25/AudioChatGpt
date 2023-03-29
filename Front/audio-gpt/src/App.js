@@ -6,10 +6,11 @@ import { useState } from 'react';
 import api from './apiAccess';
 import LandingPage from './Components/LandingPage/LandingPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import ChatPage from './Components/ChatPage/ChatPage';
 
 function App() {
 
-  const [file, setFile] = useState({});
+  /*const [file, setFile] = useState({});
   const [responce, setResponce] = useState("");
   const [textResponce, setTextResponce] = useState("");
   const [userText, setUserText] = useState("");
@@ -49,14 +50,15 @@ function App() {
 
       
     </div>
-  );
-  /*return(
+  );*/
+  return(
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<LandingPage></LandingPage>}></Route>
+        <Route path='/chat' element={<ChatPage></ChatPage>}></Route>
       </Routes>
     </BrowserRouter>
-  )*/
+  )
 }
 
 export default App;
