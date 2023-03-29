@@ -25,7 +25,6 @@ namespace AudioGhatGPT.Controllers
             {
                 Model = Models.ChatGpt3_5Turbo,
                 Temperature = 0.7F,
-                MaxTokens = 100,
                 Messages = new List<ChatMessage>
                 {
                     new ChatMessage("user",promt)

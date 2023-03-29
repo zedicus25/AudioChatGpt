@@ -13,7 +13,7 @@ public partial class DbA966d8ChatgptContext : IdentityDbContext<IdentityUser>
     {
     }
 
-    public virtual DbSet<History> Histories { get; set; }
+    public virtual DbSet<History> History { get; set; }
 
     public virtual DbSet<Request> Requests { get; set; }
 

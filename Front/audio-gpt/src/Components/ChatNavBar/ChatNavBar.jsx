@@ -1,21 +1,26 @@
 import './ChatNavBar.css'
 import token from './../../jwtToken'
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import api from './../../apiAccess';
 
 const ChatNavBar = () => {
 
     const navigate = useNavigate();
     const [selectedSubscription, setSelectedSubsription] = useState();
+    const [userData, setUserData] = useState({});
+
+    useEffect(() => {
+        setUserData(token.getUserData());
+    }, []);
     const logOut = () => {
         token.logOut();
         navigate('/');
     }
 
-    const updateSubscription = async() => {
+    const updateSubscription = async () => {
         let res = await api.upadteSubscriptions(selectedSubscription);
-        if(res.status == 200){
+        if (res.status == 200) {
             alert("You subscription was updated! You need re-authorise!");
             logOut();
         }
@@ -36,9 +41,13 @@ const ChatNavBar = () => {
                 </div>
                 <input onClick={() => updateSubscription()} className='logout-btn' type='button' value='Upgrade'></input>
             </div>
-
+            {
+                userData.UserPlus &&
+                <input onClick={() => navigate('/chat/history')} className='logout-btn' type='button' value='History'></input>
+            }
+            
             <div className="manager-nav">
-                <input onClick={() => navigate('/')} className='logout-btn' type='button' value='Back'></input>
+                <input onClick={() => navigate('/')} className='logout-btn' type='button' value='Main'></input>
                 <input onClick={() => logOut()} className='logout-btn' type='button' value='Exit'></input>
             </div>
         </div>

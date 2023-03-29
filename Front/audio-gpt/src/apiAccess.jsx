@@ -70,7 +70,10 @@ const upadteSubscriptions = async(data) => {
     return await post(`${apiUrl}/Subscription/updateSubscription?userId=${sessionStorage.getItem("userId")}&subscriptionId=${data}`)
 }
 
-
+//------------------------history---------------------------
+const getHistory = async() => {
+    return await get(`${apiUrl}/History/getHistory?userId=${sessionStorage.getItem("userId")}`)
+}
 
 //--------------------authorization--------------------
 const signIn = async(login, password) => {
@@ -86,7 +89,8 @@ const methods = {
     getAudioResponce: getAudioResponce,
     getPhotoResponce: getPhotoResponce,
     getTextResponce: getTextResponce,
-    upadteSubscriptions: upadteSubscriptions
+    upadteSubscriptions: upadteSubscriptions,
+    getHistory: getHistory
 }
 
 export default methods;

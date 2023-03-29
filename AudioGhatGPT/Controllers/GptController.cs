@@ -1,9 +1,11 @@
 ﻿using Amazon;
 using Amazon.Util.Internal;
 using Domain.Interfaces.IUnitOfWorks;
+using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using static OpenAI.GPT3.ObjectModels.SharedModels.IOpenAiModels;
 
 namespace AudioGhatGPT.Controllers
 {
@@ -41,31 +43,24 @@ namespace AudioGhatGPT.Controllers
             var subscription = _unitOfWorks.SubscriptionRepo.GetSubscriptionById(user.SubscriptionId);
             if (subscription == null)
                 return NotFound();
-          
 
 
-            if (subscription.MaxImageRequests < 0)
-            {
-                user.LastImageRequest = DateTime.Now;
-                //string transcribeText = await _transcribeHelper.TranscribeMediaFile(file);
-                //string openAIRes = await _openAIController.GetResponce("transcribeText");
-                if (_unitOfWorks.Commit() > 0)
-                    return "Image responce";
-                return StatusCode(StatusCodes.Status500InternalServerError, "Error!");
-            }
-            else
-                return "Day limit!";
-           
-
+            user.LastImageRequest = DateTime.Now;
+            
+            string transcribeText = await _transcribeHelper.TranscribeMediaFile(file);
+            string openAIRes = await _openAIController.GetResponce("transcribeText");
+            if (SaveHistory(transcribeText, openAIRes, user.Id))
+                return openAIRes;
+            return StatusCode(StatusCodes.Status500InternalServerError, "Error!");
         }
-
+            
         [HttpPost]
         [Authorize(Roles = $"{UserRoles.UserRoles.UserPremium},{UserRoles.UserRoles.UserFreePlus},{UserRoles.UserRoles.UserPlus}")]
         [Route("getReponseFromImage")]
         public async Task<ActionResult<string>> GetRepsponceFromImage()
         {
             var file = Request.Form.Files[0];
-            int userId = Convert.ToInt32( Request.Form["userId"].ToString());
+            int userId = Convert.ToInt32(Request.Form["userId"].ToString());
 
             var user = _unitOfWorks.UsersRepo.GetAll().Result.FirstOrDefault(x => x.Id == userId);
             if (user.IsBanned)
@@ -93,10 +88,10 @@ namespace AudioGhatGPT.Controllers
                 if (subscription.MaxTextRequests > 0)
                     user.CountImageRequests += 1;
                 user.LastImageRequest = DateTime.Now;
-                //string transcribeImage = await _transcribeHelper.GetLinesFromImage(file);
-                //string openAIRes = await _openAIController.GetResponce(transcribeImage);
-                if (_unitOfWorks.Commit() > 0)
-                    return "Image responce";
+                string transcribeImage = await _transcribeHelper.GetLinesFromImage(file);
+                string openAIRes = await _openAIController.GetResponce(transcribeImage);
+                if (SaveHistory(transcribeImage, openAIRes, user.Id))
+                    return openAIRes;
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error!");
             }
             else
@@ -109,10 +104,10 @@ namespace AudioGhatGPT.Controllers
             $"{UserRoles.UserRoles.UserPlus}," +
             $"{UserRoles.UserRoles.UserFree}")]
         [Route("getReponseFromText")]
-        public async Task<ActionResult<string>> GetRepsponceFromText([FromQuery(Name ="requestText")]string requestText,
-            [FromQuery(Name = "userId")]int userId)
+        public async Task<ActionResult<string>> GetRepsponceFromText([FromQuery(Name = "requestText")] string requestText,
+            [FromQuery(Name = "userId")] int userId)
         {
-            var user = _unitOfWorks.UsersRepo.GetAll().Result.FirstOrDefault(x => x.Id== userId);
+            var user = _unitOfWorks.UsersRepo.GetAll().Result.FirstOrDefault(x => x.Id == userId);
             if (user.IsBanned)
                 return "You banned!";
 
@@ -120,9 +115,9 @@ namespace AudioGhatGPT.Controllers
                 return NotFound();
 
             var subscription = _unitOfWorks.SubscriptionRepo.GetSubscriptionById(user.SubscriptionId);
-            if (subscription == null) 
+            if (subscription == null)
                 return NotFound();
-            if(user.LastTextRequest != null)
+            if (user.LastTextRequest != null)
             {
                 if (user.CountTextRequests >= subscription.MaxTextRequests &&
                     user.LastTextRequest.Value.Day < DateTime.Now.Day)
@@ -131,20 +126,44 @@ namespace AudioGhatGPT.Controllers
                     user.CountTextRequests = 0;
                 }
             }
-                
 
-            if(subscription.MaxTextRequests < 0 || user.CountTextRequests < subscription.MaxTextRequests)
+
+            if (subscription.MaxTextRequests < 0 || user.CountTextRequests < subscription.MaxTextRequests)
             {
-                //string openAIRes = await _openAIController.GetResponce(requestText);
-                if(subscription.MaxTextRequests > 0)
+                string openAIRes = await _openAIController.GetResponce(requestText);
+                if (subscription.MaxTextRequests > 0)
                     user.CountTextRequests += 1;
                 user.LastTextRequest = DateTime.Now;
-                if(_unitOfWorks.Commit() > 0)
-                    return "Text responce";
+                if (SaveHistory(requestText, openAIRes, user.Id))
+                    return openAIRes;
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error!");
             }
             else
                 return "Day limit!";
+        }
+
+        private bool SaveHistory(string request, string responce, int userId)
+        {
+            Request req = new Request()
+            {
+                RequestText = request,
+                RequestTime = DateTime.Now,
+            };
+            Responce res = new Responce()
+            {
+                ResponceText = responce
+            };
+            _unitOfWorks.ResponceRepo.Add(res);
+            _unitOfWorks.RequestRepo.Add(req);
+            if (_unitOfWorks.Commit() > 0)
+            {
+                int reqId = _unitOfWorks.RequestRepo.GetAll().Result.LastOrDefault().Id;
+                int resId = _unitOfWorks.ResponceRepo.GetAll().Result.LastOrDefault().Id;
+                History his = new History { RequestId = reqId, ResponceId = resId, UserId = userId };
+                _unitOfWorks.HistoryRepo.Add(his);
+                return _unitOfWorks.Commit() > 0;
+            }
+            return false;
         }
     }
 }

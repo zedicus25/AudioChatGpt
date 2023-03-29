@@ -6,11 +6,18 @@ using Domain.Interfaces.IUnitOfWorks;
 
 namespace DataAccessEF.UnitOfWorks
 {
+
     public class UnitOfWorks : IUnitOfWorks
     {
         public IUserRepo UsersRepo { get; }
 
         public ISubscriptionRepo SubscriptionRepo { get; }
+
+        public IHistoryRepo HistoryRepo { get; }
+
+        public IRequestRepo RequestRepo { get; }
+
+        public IResponceRepo ResponceRepo { get; }
 
         private readonly DbA966d8ChatgptContext _dbContext;
 
@@ -19,6 +26,9 @@ namespace DataAccessEF.UnitOfWorks
             _dbContext = context;
             UsersRepo = new UserRepo(context);
             SubscriptionRepo = new SubsriptionRepo(context);
+            HistoryRepo = new HistoryRepo(context); 
+            RequestRepo = new RequestRepo(context);
+            ResponceRepo = new ResponceRepo(context);
         }
         public int Commit() => _dbContext.SaveChanges();
 

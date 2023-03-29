@@ -1,0 +1,31 @@
+.p{
+    color:#071A1B;
+    font-size: 18px;
+    word-wrap: break-word;
+    font-weight: 600;
+}
+
+.p-res{
+    background-color:#abd8e0 ;
+    color:#071A1B;
+    font-size: 18px;
+    word-wrap: break-word;
+    font-weight: 600;
+    padding: 15px;
+    margin: 15px;
+}
+
+.p-req{
+    padding: 15px;
+    background-color:rgb(119, 149, 155) ;
+    color:#071A1B;
+    font-size: 18px;
+    word-wrap: break-word;
+    font-weight: 600;
+    margin: 15px;
+}
+
+.block-res{
+    border-bottom: 2px solid #071A1B;
+
+}

@@ -23,8 +23,11 @@ const ChatComponent = () => {
             return;
         let res = await api.getTextResponce(text);
         console.log(res);
-        if (res.status == 200)
+        if (res.status == 200){
+            setText("");
             setResText(resText => [...resText, <p key={resText.length + 1} className='res'>{res.data}</p>]);
+        }
+           
     }
 
     const sendImage = async (e) => {
@@ -168,13 +171,6 @@ const ChatComponent = () => {
                                         </img>
                                     </button>
                                 ) : null}
-
-
-                                {/* {userInfo.UserPremium &&
-                                    <button onClick={(e) => sendAudio(e)} className='send-audio-btn'>
-                                        <img src='mic.png' style={{ width: "1rem", height: "1rem" }}>
-                                        </img>
-                                    </button>} */}
                             </div>
                         </form>
                     </div>
