@@ -9,9 +9,12 @@ public class User
 
     public string IdentityId { get; set; }
 
-    public int CountRequests { get; set; }
+    public int CountTextRequests { get; set; }
 
-    public DateTime? LastRequest { get; set; }
+    public DateTime? LastTextRequest { get; set; }
+    public int CountImageRequests { get; set; }
+
+    public DateTime? LastImageRequest { get; set; }
     public bool IsBanned { get; set; }
     public DateTime? UnbanTime { get; set; }
 

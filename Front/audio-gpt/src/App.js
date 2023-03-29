@@ -9,7 +9,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
 
-  /*const [file, setFile] = useState({});
+  const [file, setFile] = useState({});
   const [responce, setResponce] = useState("");
   const [textResponce, setTextResponce] = useState("");
   const [userText, setUserText] = useState("");
@@ -19,6 +19,7 @@ function App() {
     e.preventDefault();
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('userId', sessionStorage.getItem('userId'));
     let res = await api.getPhotoResponce(formData);
     if (res.status == '200')
       setResponce(res.data);
@@ -26,6 +27,7 @@ function App() {
   const sendText = async (e) => {
     e.preventDefault();
     let res = await api.getTextResponce(userText);
+    console.log(res);
     if (res.status == '200')
       setResponce(res.data);
   }
@@ -47,14 +49,14 @@ function App() {
 
       
     </div>
-  );*/
-  return(
+  );
+  /*return(
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<LandingPage></LandingPage>}></Route>
       </Routes>
     </BrowserRouter>
-  )
+  )*/
 }
 
 export default App;

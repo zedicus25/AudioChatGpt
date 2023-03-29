@@ -4,6 +4,7 @@ using DataAccesEF.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessEF.Migrations
 {
     [DbContext(typeof(DbA966d8ChatgptContext))]
-    partial class DbA966d8ChatgptContextModelSnapshot : ModelSnapshot
+    [Migration("20230329114504_mig-27")]
+    partial class mig27
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -95,10 +98,7 @@ namespace DataAccessEF.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("MaxImageRequests")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MaxTextRequests")
+                    b.Property<int>("MaxRequests")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")

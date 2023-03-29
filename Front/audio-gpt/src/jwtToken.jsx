@@ -23,9 +23,9 @@ const getUserData = () => {
     }
 
     const uncodedToken = unParseToken(token);
-
     return {
         username: Object.values(uncodedToken)[0],
+        userId: Object.values(uncodedToken)[3],
         UserFree: Object.values(uncodedToken)[2].includes('UserFree'),
         UserFreePlus: Object.values(uncodedToken)[2].includes('UserFreePlus'),
         UserPlus: Object.values(uncodedToken)[2].includes('UserPlus'),

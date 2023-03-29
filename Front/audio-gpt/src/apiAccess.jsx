@@ -27,7 +27,7 @@ const post = async(url, data) => {
     await axios.post(url, data, {
         headers:{
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
+            'Content-Type': `multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW`,
             'Authorization': "Bearer " + token.getToken()
         }
     }).then(function(response) {
@@ -64,7 +64,7 @@ const getPhotoResponce = async(data) => {
     return await postWithFile(`${apiUrl}/Gpt/getReponseFromImage`, data);
 }
 const getTextResponce = async(data) => {
-    return await post(`${apiUrl}/Gpt/getReponseFromText?requestText=${data}`,{});
+    return await post(`${apiUrl}/Gpt/getReponseFromText?requestText=${data}&userId=${sessionStorage.getItem("userId")}`,{});
 }
 
 

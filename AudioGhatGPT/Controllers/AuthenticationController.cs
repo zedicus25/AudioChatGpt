@@ -49,11 +49,13 @@
 
                     var token = GetToken(authClaims);
 
+                    var myUser = _unitOfWorks.UsersRepo.GetAll().Result.FirstOrDefault(x => x.IdentityId == user.Id);
+
                     return Ok(new
                     {
                         Token = new JwtSecurityTokenHandler().WriteToken(token),
-                        expiration = token.ValidTo,
-                        Roles = userRole
+                        Roles = userRole,
+                        UserId = myUser.Id
                     });
                 }
                 return Unauthorized();
@@ -81,13 +83,17 @@
                 {
                     IdentityId = identityUser.Id,
                     IsBanned = false,
-                    LastRequest = null,
+                    LastTextRequest = null,
+                    LastImageRequest = null,
                     SubscriptionId = (int)Subscriptions.Subscriptions.Free,
                     UnbanTime = null,
-                    CountRequests = 0,
+                    CountTextRequests = 0,
+                    CountImageRequests = 0
                 };
                 _unitOfWorks.UsersRepo.Add(user);
-                _unitOfWorks.Commit();
+                if(_unitOfWorks.Commit() <= 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Creation failed!");
+
 
                 await CreateRoles();
 
@@ -118,12 +124,16 @@
                 {
                     IdentityId = identityUser.Id,
                     IsBanned = false,
-                    LastRequest = null,
+                    LastTextRequest = null,
+                    LastImageRequest = null,
                     SubscriptionId = (int)Subscriptions.Subscriptions.Premium,
                     UnbanTime = null,
-                    CountRequests = 0,
+                    CountTextRequests = 0,
+                    CountImageRequests = 0
                 };
                 _unitOfWorks.UsersRepo.Add(user);
+                if (_unitOfWorks.Commit() <= 0)
+                    return StatusCode(StatusCodes.Status500InternalServerError, "Creation failed!");
 
                 await CreateRoles();
 

@@ -3,6 +3,7 @@
     public interface IUnitOfWorks : IDisposable
     {
         public IUserRepo UsersRepo { get; }
+        public ISubscriptionRepo SubscriptionRepo { get; }
 
         int Commit();
     }

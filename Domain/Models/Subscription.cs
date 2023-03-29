@@ -9,7 +9,8 @@ public class Subscription
 
     public string Title { get; set; } = null!;
 
-    public int MaxRequests { get; set; }
+    public int MaxTextRequests { get; set; }
+    public int MaxImageRequests { get; set; }
 
     public virtual ICollection<User> Users { get; } = new List<User>();
 }

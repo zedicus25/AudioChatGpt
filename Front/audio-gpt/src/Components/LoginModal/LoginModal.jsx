@@ -28,6 +28,7 @@ const LoginModal = (props) => {
           return;
         }
         if(res.status == '200'){
+          sessionStorage.setItem('userId', res.data.userId);
           props.onHide();
           clearInputs();
         }
