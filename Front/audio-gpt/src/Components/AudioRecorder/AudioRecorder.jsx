@@ -12,8 +12,6 @@ const AudioRecorder = () => {
 
     const [stream, setStream] = useState(null);
 
-    const [audio, setAudio] = useState(null);
-
     const [aiText, setAIText] = useState("");
 
     const [audioChunks, setAudioChunks] = useState([]);
