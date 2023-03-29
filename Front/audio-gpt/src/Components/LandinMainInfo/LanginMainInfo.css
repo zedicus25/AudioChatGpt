@@ -1,0 +1,63 @@
+.background {
+    background-image: url("./../../../public/landingBack.jpg");
+    height: 500px;
+padding-top: 255px;
+background-repeat: no-repeat;
+background-size: cover;
+background-position: top center;
+}
+
+.container{
+    width: 100%;
+padding-right: 15px;
+padding-left: 15px;
+margin-right: auto;
+margin-left: auto;
+}
+
+.row{
+    display: -ms-flexbox;
+display: flex;
+-ms-flex-wrap: wrap;
+flex-wrap: wrap;
+margin-right: -15px;
+margin-left: -15px;
+}
+
+.col-50{
+    flex: 0 0 50%;
+max-width: 50%;
+position: relative;
+width: 100%;
+padding-right: 15px;
+padding-left: 15px;
+}
+
+.info-text{
+    margin-left: 150px;
+    display: flex;
+    flex-direction: column;
+}
+
+.info-text span {
+    color: #ffffff;
+display: block;
+font-size: 15px;
+font-weight: 600;
+letter-spacing: 2px;
+text-transform: uppercase;
+margin-bottom: 18px;
+position: relative;
+}
+
+.info-text h2 {
+    word-break: break-all;
+    white-space: normal;
+    color: #ffffff;
+font-size: 60px;
+font-weight: 700;
+line-height: 70px;
+text-transform: uppercase;
+margin-bottom: 38px;
+position: relative;
+}

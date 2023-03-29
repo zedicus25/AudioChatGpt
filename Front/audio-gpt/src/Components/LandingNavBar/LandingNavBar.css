@@ -1,0 +1,96 @@
+.header {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 9;
+}
+
+.container {
+    max-width: 1170px;
+    width: 100%;
+padding-right: 15px;
+padding-left: 15px;
+margin-right: auto;
+margin-left: auto;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+
+
+.col-lg-2{
+    position: relative;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    max-width: 16%;
+}
+.col-lg-10{
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-right: 15px;
+    padding-left: 15px;
+    max-width: 83%;
+    min-width: 992px;
+
+}
+
+.nav-container{
+    padding: 45px 0px;
+    display: flex;
+    flex-direction: row;
+}
+
+.nav-menu{
+    display: flex;
+    justify-content: left;
+margin-right: 45px;
+}
+
+.nav-menu ul{
+    padding: 0px;
+    margin: 0px;    
+    display: flex;
+    list-style: none;
+    justify-content:space-between;
+    justify-items: center;
+}
+
+.nav-menu ul li{
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+.control-btn{
+    padding: 50px 0px;
+    display: flex;
+    float: right;
+}
+
+
+
+.control-btn-a{
+    color: #000000;
+font-size: 15px;
+margin-right: 18px;
+}
+
+.control-btn a {
+    font-size: 15px;
+color: #ffffff;
+display: block;
+text-transform: uppercase;
+position: relative;
+padding: 6px 0;
+}

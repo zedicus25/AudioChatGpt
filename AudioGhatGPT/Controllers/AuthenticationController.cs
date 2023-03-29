@@ -87,6 +87,7 @@
                     CountRequests = 0,
                 };
                 _unitOfWorks.UsersRepo.Add(user);
+                _unitOfWorks.Commit();
 
                 await CreateRoles();
 

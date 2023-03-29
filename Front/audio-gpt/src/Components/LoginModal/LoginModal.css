@@ -1,0 +1,67 @@
+.paddingTB-50{
+    padding-top: 50px;
+    padding-bottom: 50px;
+    background-color: #93B7BE;
+  }
+
+  .flexBox-column{
+    display:  flex;
+    flex-direction: column;
+  }
+  .Auth-form-container {
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  }
+  
+  .Auth-form {
+    width: 420px;
+    padding-top: 30px;
+    padding-bottom: 20px;
+    border-radius: 8px;
+    background-color: #93B7BE;
+  }
+  
+  .Auth-form-content {
+    padding-left: 12%;
+    padding-right: 12%;
+  }
+  
+  .Auth-form-title {
+    text-align: center;
+    margin-bottom: 1em;
+    font-size: 24px;
+    color: rgb(34, 34, 34);
+    font-weight: 800;
+  }
+  
+  label {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgb(34, 34, 34);
+  }
+
+  .my-btn{
+    font-size: 18px;
+    font-weight: 600;
+    background-color: #4464AD;
+  }
+  .my-btn:hover{
+    background-color: #3d5ba1;
+  }
+  .my-btn-link{
+    font-size: 18px;
+    font-weight: 600;
+    color: rgb(34, 34, 34);
+  }
+  .my-btn-link:hover{
+    color: rgb(20, 20, 20);
+  }
+
+  .error-text{
+    font-size: 14px;
+    color: #A4303F;
+    font-weight: 600;
+  }

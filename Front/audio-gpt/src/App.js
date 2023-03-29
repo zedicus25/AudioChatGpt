@@ -4,10 +4,12 @@ import AudioRecorder from './Components/AudioRecorder/AudioRecorder';
 import LoginModal from './Components/LoginModal/LoginModal';
 import { useState } from 'react';
 import api from './apiAccess';
+import LandingPage from './Components/LandingPage/LandingPage';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
 
-  const [file, setFile] = useState({});
+  /*const [file, setFile] = useState({});
   const [responce, setResponce] = useState("");
   const [textResponce, setTextResponce] = useState("");
   const [userText, setUserText] = useState("");
@@ -45,7 +47,14 @@ function App() {
 
       
     </div>
-  );
+  );*/
+  return(
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<LandingPage></LandingPage>}></Route>
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
 export default App;
