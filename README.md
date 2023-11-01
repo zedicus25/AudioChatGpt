@@ -13,3 +13,12 @@ Request page:
 
 History page:
 ![history](https://github.com/zedicus25/AudioChatGpt/assets/95874337/06f2f9e8-0233-41e5-b498-249b2fe8fb8f)
+
+
+# **Back-End**
+- The back-end part was made through a three-level architectural team.
+- Interaction with the database is done through EF.
+- The database is created in accordance with the forms of normalisation.
+
+**Database**
+![audiodb](https://github.com/zedicus25/AudioChatGpt/assets/95874337/ebd8eb68-6bb1-406e-8f17-b3d6e9319e4f)
